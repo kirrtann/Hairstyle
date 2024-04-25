@@ -1,54 +1,19 @@
-import React, { useState, useEffect } from "react";
-import Webcam from "react-webcam";
-import { createDetector, SupportedModels } from '@tensorflow-models/face-landmarks-detection';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import createStore from './store';
+import TheUsual from './containers/Usual';
 
-const HairstyleFilter = () => {
-  const [videoStream, setVideoStream] = useState(null);
-  const [faceMesh, setFaceMesh] = useState(null);
+const store = createStore();
 
-  useEffect(() => {
-    // Load the Face Mesh model
-    const loadFaceMeshModel = async () => {
-      try {
-        const faceDetector = await createDetector(SupportedModels.MediaPipeFaceMesh);
-        setFaceMesh(faceDetector);
-      } catch (error) {
-        console.error('Error loading Face Mesh model:', error);
-      }
-    };
-    loadFaceMeshModel();
-  }, []);
-
-  const handleVideoStream = () => {
-    // Handle the video stream
-  };
-
-  const applyHairstyleFilter = (faceMeshPredictions) => {
-    // Apply the hairstyle filter
-    // TODO: Implement the hairstyle filter algorithm using faceMeshPredictions
-  };
-
-  useEffect(() => {
-    if (videoStream && faceMesh) {
-      // Perform face landmark detection
-      const detectFacialLandmarks = async () => {
-        try {
-          const predictions = await faceMesh.estimateFaces(videoStream);
-          applyHairstyleFilter(predictions);
-        } catch (error) {
-          console.error('Error detecting facial landmarks:', error);
-        }
-      };
-      detectFacialLandmarks();
-    }
-  }, [videoStream, faceMesh]);
-
+function App() {
   return (
-    <div>
-      <Webcam onLoadedData={handleVideoStream} />
-      <canvas id="canvas" />
-    </div>
+    <Provider store={store}>
+      <Router>
+        <Route path="/" component={TheUsual} />
+      </Router>
+    </Provider>
   );
-};
+}
 
-export default HairstyleFilter;
+export default App;
